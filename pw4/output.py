@@ -1,30 +1,23 @@
-def list_students(students):
-    print("Students List")
-    if not students:
-        print("Student list is empty.")
-        return
-    for student in students:
-        print(student)
+import numpy as np
 
-def list_courses(courses):
-    print("Courses List")
-    if not courses:
-        print("Course list is empty.")
-        return
-    for course in courses:
-        print(course)
+def display_menu(stdscr):
+    stdscr.clear()
+    stdscr.addstr(0, 0, "Student management system\n1. Input students\n2. Input courses\n3. Input marks\n4. Show students (Sorted by GPA)\n0. Exit\n\nSelect option: ")
+    stdscr.refresh()
 
-def show_student_marks(students, marks):
-    cid = input("Enter Course ID to view marks: ")
-    print(f"Marks for {cid} ")
-    found = False
-    for student in students:
-        sid = student.get_id()
-        name = student.get_name()
-        mark = marks.get((cid, sid), 'N/A')
-        if (cid, sid) in marks:
-            found = True
-        print(f"{name} ({sid}): {mark}")
+def show_students_sorted(stdscr, students):
+    stdscr.clear()
+    if students:
+        gpas = np.array([s.gpa for s in students])
+        sorted_indices = np.argsort(-gpas)
+        sorted_students = [students[i] for i in sorted_indices]
         
-    if not found:
-        print("No marks recorded for this course yet.")
+        stdscr.addstr(0, 0, "Students list (Sorted by GPA)\n")
+        for s in sorted_students:
+            stdscr.addstr(str(s) + "\n")
+    else:
+        stdscr.addstr(0, 0, "Error: No students found ")
+        
+    stdscr.addstr("\nPress any key to return ")
+    stdscr.refresh()
+    stdscr.getch()
